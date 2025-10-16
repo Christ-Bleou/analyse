@@ -1,0 +1,60 @@
+@startuml
+title Diagramme de classes - AGTS
+' Définition des classes principales du système
+class Utilisateur {
+  - id : int
+  __
+  - nom : String
+  - prenom : String
+  - email : String
+  - motDePasse : String
+  --
+  + seConnecter()
+  + seDeconnecter()
+}
+
+class Etudiant {
+  - matricule : String
+  __
+  - quartier : String
+  --
+  + suivreBus()
+}
+
+class Chauffeur {
+  - idBus : int
+  __
+  - position : String
+  --
+  + envoyerPosition()
+}
+
+class Bus {
+  - idBus : int
+  __
+  - capacite : int
+  - positionGPS : String
+  - statut : String
+  --
+  + demarrerTrajet()
+  + arreterTrajet()
+}
+
+class Trajet {
+  - idTrajet : int
+  __
+  - heureDepart : DateTime
+  - heureArrivee : DateTime
+  - arrets : List<String>
+  --
+  + planifier()
+  + afficherStat()
+}
+
+Utilisateur <|-- Etudiant : hérite
+Utilisateur <|-- Chauffeur : hérite
+Bus "1" -- "1..*" Trajet : réalise
+Chauffeur "1" -- "1" Bus : conduit
+Etudiant "1" -- "1" Bus : suit
+
+@enduml

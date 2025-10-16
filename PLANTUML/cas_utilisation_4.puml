@@ -1,0 +1,25 @@
+@startuml
+left to right direction
+title Diagramme de cas d'utilisation - AGTS
+' Actions principales des utilisateurs pour les utilisateurs du système
+' Acteurs et cas d'utilisation principaux du système
+actor Étudiant as Student
+actor Chauffeur as Driver
+actor Administrateur as Admin
+
+rectangle{
+usecase "Suivre bus" as UC1
+usecase "Recevoir notifications" as UC2
+usecase "Démarrer trajet" as UC3
+usecase "Partager position" as UC4
+usecase "Gérer les trajets" as UC5
+usecase "Gérer utilisateurs" as UC6
+}
+
+Student --> UC1
+Student --> UC2
+Driver --> UC3
+Driver --> UC4
+Admin --> UC5
+Admin --> UC6
+@enduml

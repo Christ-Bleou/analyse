@@ -1,0 +1,19 @@
+@startuml
+title Diagramme de séquence - Suivi en temps réel - AGTS
+' Suivi du bus par étudiant
+' Interaction entre l'étudiant, l'application mobile et le serveur pour le suivi en temps réel
+actor Étudiant
+participant Application
+participant Serveur
+participant Bus
+
+Étudiant -> Application : Se connecter()
+Application -> Serveur : Vérifier identifiants
+Serveur -> Application : Confirmation / Token
+Étudiant -> Application : Ouvrir suivi
+Application -> Serveur : Demande position(busID)
+Serveur -> Bus : getPosition()
+Bus -> Serveur : positionGPS
+Serveur -> Application : positionGPS
+Application -> Étudiant : Afficher position sur carte
+@enduml

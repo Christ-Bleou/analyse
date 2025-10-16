@@ -1,0 +1,20 @@
+@startuml
+title Diagramme d'activités - AGTS
+' Démarrage d'un trajet par le chauffeur
+' Définition des activités et des flux de contrôle
+start
+:Connexion au système;
+:Entrer identifiants;
+if (Connexion réussie ?) then (oui)
+  :Sélectionner bus et trajet;
+  :Appuyer sur "Démarrer trajet";
+  :Activation du GPS;
+  repeat
+    :Envoi périodique de la position au serveur;
+  repeat while (Fin de trajet ? == non)
+  :Arrêter envoi position;
+else (non)
+  :Afficher "Message d’erreur";
+endif
+stop
+@enduml
