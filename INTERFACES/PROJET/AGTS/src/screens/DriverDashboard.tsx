@@ -1,16 +1,37 @@
-// src/screens/DriverDashboard.tsx
-import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import { useTrackingStore, Stop } from '../stores/trackingStore';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import BottomNav from '../components/BottomNav';
 import MapView from '../components/MapView';
-import { UsersIcon, MapPinIcon, PlayIcon, SquareIcon } from 'lucide-react';
+import { UsersIcon, MapPinIcon, PlayIcon, PauseIcon, SquareIcon, Share2Icon, NavigationIcon } from 'lucide-react';
 
 function DriverHome() {
-  const user = useAuthStore((state) => state.user);
-  const [tripActive, setTripActive] = useState(false);
+  const { user } = useAuthStore();
+  const {
+    startSimulation,
+    pauseSimulation,
+    stopSimulation,
+    startRealLocation,
+    shareLocationLink,
+    isSimulating,
+    busData,
+    stops,
+    currentStopIndex,
+  } = useTrackingStore();
+
+  const handleShare = () => {
+    const link = shareLocationLink();
+    if (navigator.userAgent.match(/Android|iPhone/i)) {
+      window.open(link, '_blank');
+    } else {
+      navigator.clipboard.writeText(link);
+      alert('Lien Google Maps copié dans le presse-papiers ! 📍');
+    }
+  };
+
+  const stopTimes = ['07:30', '07:45', '08:00', '08:15'];
 
   const students = [
     { id: '1', name: 'Kouassi Samuel', status: 'present', time: '07:30' },
@@ -21,59 +42,53 @@ function DriverHome() {
 
   return (
     <div className="min-h-screen bg-agts-background pb-24">
-      {/* En-tête Chauffeur */}
       <div className="bg-agts-gradient-blue text-white px-6 pt-12 pb-8">
         <h1 className="text-3xl font-bold mb-2">
           Bienvenue, {user?.firstName || "Chauffeur"} 🚍
         </h1>
         <p className="text-white/90 font-light">
-          Route IIT - Cocody
+          {busData?.routeName || 'Cocody → IIT Grand-Bassam'}
         </p>
       </div>
 
       <div className="px-6 -mt-4">
-        {/* Carte et Statut */}
         <div className="mb-6">
           <div className="relative rounded-lg overflow-hidden shadow-md border border-agts-border" style={{ height: '300px' }}>
             <MapView />
             <div className="absolute top-4 left-4 bg-white rounded-lg px-4 py-2 shadow-lg z-[400]">
               <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Statut</p>
               <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full ${tripActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></span>
+                <span className={`w-3 h-3 rounded-full ${isSimulating || busData?.isRunning ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
                 <p className="font-bold text-agts-foreground">
-                  {tripActive ? 'En cours' : 'En attente'}
+                  {isSimulating || busData?.isRunning ? 'En cours' : 'En attente'}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Boutons d'action */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <Button
-            onClick={() => setTripActive(true)}
-            disabled={tripActive}
-            className={`text-white font-bold ${
-                tripActive ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-agts-success hover:bg-green-600'
-            }`}
-          >
-            <PlayIcon className="w-5 h-5 mr-2" strokeWidth={2} />
-            Démarrer
+          <Button onClick={startSimulation} disabled={isSimulating} className="bg-agts-success hover:bg-green-600 text-white">
+            <PlayIcon className="w-5 h-5 mr-2" /> Simulation
           </Button>
           
-          <Button
-            onClick={() => setTripActive(false)}
-            disabled={!tripActive}
-            className={`text-white font-bold ${
-                !tripActive ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-red-500 hover:bg-red-600'
-            }`}
-          >
-            <SquareIcon className="w-5 h-5 mr-2" strokeWidth={2} />
-            Terminer
+          <Button onClick={startRealLocation} disabled={isSimulating} className="bg-blue-600 hover:bg-blue-700 text-white">
+            <NavigationIcon className="w-5 h-5 mr-2" /> Mode GPS Réel
+          </Button>
+
+          <Button onClick={pauseSimulation} variant="secondary" disabled={!isSimulating} className="col-span-1">
+            <PauseIcon className="w-5 h-5 mr-2" /> Pause
+          </Button>
+          
+          <Button onClick={stopSimulation} variant="destructive" className="col-span-1">
+            <SquareIcon className="w-5 h-5 mr-2" /> Arrêter
+          </Button>
+          
+          <Button onClick={handleShare} variant="outline" className="col-span-2 border-agts-primary text-agts-primary hover:bg-blue-50">
+            <Share2Icon className="w-5 h-5 mr-2" /> Partager ma position
           </Button>
         </div>
 
-        {/* Liste des étudiants */}
         <Card>
           <CardHeader>
             <CardTitle className="text-agts-foreground flex items-center text-lg">
@@ -108,7 +123,6 @@ function DriverHome() {
           </CardContent>
         </Card>
 
-        {/* Liste des arrêts */}
         <Card className="mt-4">
           <CardHeader>
             <CardTitle className="text-agts-foreground flex items-center text-lg">
@@ -118,20 +132,12 @@ function DriverHome() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {[
-                { name: 'Cocody Centre', time: '07:30', completed: true },
-                { name: 'Riviera Palmeraie', time: '07:45', completed: true },
-                { name: 'Deux Plateaux', time: '08:00', completed: false },
-                { name: 'IIT Campus', time: '08:15', completed: false },
-              ].map((stop, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between py-2"
-                >
+              {stops && stops.map((stop: Stop, index: number) => (
+                <div key={index} className="flex items-center justify-between py-2">
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                        stop.completed
+                        index < currentStopIndex
                           ? 'bg-green-100 text-green-700'
                           : 'bg-gray-100 text-gray-500'
                       }`}
@@ -139,10 +145,14 @@ function DriverHome() {
                       {index + 1}
                     </div>
                     <div>
-                      <p className={`font-medium ${stop.completed ? 'text-gray-800' : 'text-gray-500'}`}>
-                          {stop.name}
+                      <p
+                        className={`font-medium ${
+                          index < currentStopIndex ? 'text-gray-800' : 'text-gray-500'
+                        }`}
+                      >
+                        {stop.name}
                       </p>
-                      <p className="text-xs text-gray-400">{stop.time}</p>
+                      <p className="text-xs text-gray-400">{stopTimes[index] || '-'}</p>
                     </div>
                   </div>
                 </div>

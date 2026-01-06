@@ -4,11 +4,6 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  server: {
-    hmr: {
-      overlay: false  // Plus d'overlay rouge même si erreur rare
-    }
-  },
   plugins: [
     react(),
     tsconfigPaths(),
@@ -18,12 +13,9 @@ export default defineConfig({
         name: 'AGTS',
         short_name: 'AGTS',
         icons: [
-          { src: '/vite.svg', sizes: '192x192', type: 'image/svg+xml' },
-          { src: '/vite.svg', sizes: '512x512', type: 'image/svg+xml' }
-        ],
-        theme_color: '#0033A0',
-        background_color: '#ffffff',
-        display: 'standalone'
+          { src: 'vite.svg', sizes: '192x192', type: 'image/svg+xml' },
+          { src: 'vite.svg', sizes: '512x512', type: 'image/svg+xml' }
+        ]
       }
     })
   ],

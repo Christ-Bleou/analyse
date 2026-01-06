@@ -1,0 +1,13 @@
+{
+  "name": "AGTS - Transport Scolaire",
+  "short_name": "AGTS",
+  "description": "Suivi temps réel bus scolaire",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0033A0",
+  "icons": [
+    { "src": "/vite.svg", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "/vite.svg", "sizes": "512x512", "type": "image/svg+xml" }
+  ]
+}
