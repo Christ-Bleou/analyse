@@ -1,0 +1,52 @@
+@startuml
+skinparam dpi 120
+skinparam backgroundColor #FFFFFF
+skinparam handwritten false
+
+' --- Style global ---
+skinparam card {
+  BackgroundColor #F0F8FF
+  BorderColor #000000
+  BorderThickness 1
+  RoundCorner 10
+}
+skinparam rectangle {
+  BackgroundColor #EAF6F6
+  BorderColor #000000
+  BorderThickness 1
+  RoundCorner 10
+}
+skinparam titleFontSize 18
+skinparam titleFontColor #004AAD
+skinparam titleTextAlignment center
+skinparam defaultTextAlignment center
+
+left to right direction
+
+title 🚌 AGTS — Application de Gestion de Transport Scolaire (IIT)
+
+' --- SECTION 1 : Accueil ---
+card "🏠 Accueil\n\n• Logo IIT\n• Bouton Connexion / Inscription\n• Carte interactive du bus (positions temps réel)\n• Bouton Consulter Trajets" as Home
+
+' --- SECTION 2 : Étudiant ---
+card "👤 Espace Étudiant\n\n• Liste des trajets disponibles\n• Suivi GPS du bus\n• Notifications / Retards" as Etudiant
+
+' --- SECTION 3 : Chauffeur ---
+card "🧑‍✈️ Espace Chauffeur\n\n• Démarrer / Terminer trajet\n• Liste étudiants embarqués\n• Signalement incident" as Chauffeur
+
+' --- SECTION 4 : Administrateur ---
+card "👨‍💼 Espace Administrateur\n\n• Gestion Chauffeurs\n• Gestion Étudiants\n• Historique trajets\n• Tableau de bord statistiques" as Admin
+
+' --- SECTION 5 : Paramètres ---
+card "⚙️ Paramètres\n\n• Profil utilisateur\n• Langue / Thème" as Params
+
+' --- RELATIONS / FLUX DE NAVIGATION ---
+Home -down-> Etudiant : Connexion Étudiant
+Home -right-> Chauffeur : Connexion Chauffeur
+Home -up-> Admin : Connexion Admin
+Etudiant -right-> Params : Modifier Profil
+Chauffeur -down-> Params : Paramètres
+Admin -left-> Params : Configuration
+Params -up-> Home : Retour Accueil
+
+@enduml

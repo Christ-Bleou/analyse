@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AGTS — UML (.puml) & rendu PlantUML</title>
+  <style>
+    body {
+      font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f6f9fc;
+      color: #0b2545
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px
+    }
+
+    header h1 {
+      font-size: 20px;
+      margin: 0
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    textarea {
+      width: 100%;
+      height: 640px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d7e6f6;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.4
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px
+    }
+
+    button {
+      background: #004aad;
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600
+    }
+
+    button.secondary {
+      background: #e6eefb;
+      color: #004aad;
+      border: 1px solid #cfe0fb
+    }
+
+    .output {
+      background: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d7e6f6;
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+      row-gap: 8px
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #234f86;
+      margin-bottom: 6px
+    }
+
+    .svg-wrap {
+      flex: 1;
+      overflow: auto;
+      padding: 8px;
+      border-radius: 6px;
+      background: #fbfdff;
+      border: 1px dashed #e6f0fb;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    footer {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #385a8a
+    }
+
+    @media (max-width:980px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      textarea {
+        height: 420px
+      }
+
+      .output {
+        min-height: 320px
+      }
+    }
+  </style>
+  <!-- pako for deflateRaw -->
+  <script src="https://unpkg.com/pako@2.1.0/dist/pako.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="flex:0 0 36px">
+      <rect width="24" height="24" rx="5" fill="#004aad"></rect>
+      <path d="M6 15v-6h12v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="8.5" cy="17.5" r="1" fill="#fff" />
+      <circle cx="15.5" cy="17.5" r="1" fill="#fff" />
+    </svg>
+    <div>
+      <h1>AGTS — UML (.puml) & rendu PlantUML</h1>
+      <div style="font-size:13px;color:#2f587a">Colle/édite le .puml puis clique <strong>Render</strong></div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <button id="renderBtn">Render</button>
+    <button id="downloadBtn" class="secondary">Télécharger .puml</button>
+    <button id="downloadSvgBtn" class="secondary">Télécharger SVG</button>
+    <div style="margin-left:auto;font-size:13px;color:#2f587a">Serveur PlantUML:
+      <code>https://www.plantuml.com/plantuml/svg/</code>
+    </div>
+  </div>
+
+  <div class="container">
+    <div>
+      <textarea id="pumlText" spellcheck="false">
+    @startuml
+    skinparam dpi 120
+    skinparam backgroundColor #FFFFFF
+    skinparam handwritten false
+
+    ' --- Style global ---
+    skinparam card {
+      BackgroundColor #F0F8FF
+      BorderColor #000000
+      BorderThickness 1
+      RoundCorner 10
+    }
+    skinparam rectangle {
+      BackgroundColor #EAF6F6
+      BorderColor #000000
+      BorderThickness 1
+      RoundCorner 10
+    }
+    skinparam titleFontSize 18
+    skinparam titleFontColor #004AAD
+    skinparam titleTextAlignment center
+    skinparam defaultTextAlignment center
+
+    left to right direction
+
+    title 🚌 AGTS — Application de Gestion de Transport Scolaire (IIT)
+
+    ' --- SECTION 1 : Accueil ---
+    card "🏠 Accueil\n\n• Logo IIT\n• Bouton Connexion / Inscription\n• Carte interactive du bus (positions temps réel)\n• Bouton Consulter Trajets" as Home
+
+    ' --- SECTION 2 : Étudiant ---
+    card "👤 Espace Étudiant\n\n• Liste des trajets disponibles\n• Suivi GPS du bus\n• Notifications / Retards" as Etudiant
+
+    ' --- SECTION 3 : Chauffeur ---
+    card "🧑‍✈️ Espace Chauffeur\n\n• Démarrer / Terminer trajet\n• Liste étudiants embarqués\n• Signalement incident" as Chauffeur
+
+    ' --- SECTION 4 : Administrateur ---
+    card "👨‍💼 Espace Administrateur\n\n• Gestion Chauffeurs\n• Gestion Étudiants\n• Historique trajets\n• Tableau de bord statistiques" as Admin
+
+    ' --- SECTION 5 : Paramètres ---
+    card "⚙️ Paramètres\n\n• Profil utilisateur\n• Langue / Thème" as Params
+
+    ' --- RELATIONS / FLUX DE NAVIGATION ---
+    Home -down-> Etudiant : Connexion Étudiant
+    Home -right-> Chauffeur : Connexion Chauffeur
+    Home -up-> Admin : Connexion Admin
+    Etudiant -right-> Params : Modifier Profil
+    Chauffeur -down-> Params : Paramètres
+    Admin -left-> Params : Configuration
+    Params -up-> Home : Retour Accueil
+
+    @enduml
+      </textarea>
+    </div>
+
+    <div class="output">
+      <div class="meta">Rendu SVG généré depuis le serveur public PlantUML. Édite le PUML ci-contre puis cliquez
+        <strong>Render</strong>.
+      </div>
+      <div class="svg-wrap" id="svgWrap">
+        <div style="color:#2f587a">Aucun rendu encore — clique <strong>Render</strong> pour générer.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Astuce : si tu veux récupérer un PNG, remplace `/svg/` par `/png/` dans l'URL de plantuml. <br>
+    Attention : le serveur public peut être limité — pour un usage intensif, installe PlantUML localement ou utilise un
+    service privé.
+  </footer>
+
+  <script>
+    /*
+      PlantUML encodeur JS minimal :
+      - utilise pako.deflateRaw pour comprimer la chaîne PUML
+      - transforme le resultat en string binaire puis en base64 "modifié" compatible PlantUML
+      Référence: algorithme officiel d'encodage PlantUML
+    */
+
+    function encodePlantUML(pumlText) {
+      // UTF-8 encode
+      const utf8encoder = new TextEncoder();
+      const data = utf8encoder.encode(pumlText);
+
+      // deflate raw (RFC 1951)
+      const deflated = pako.deflateRaw(data, { level: 9 });
+
+      // convert Uint8Array to binary string
+      let binary = "";
+      for (let i = 0; i < deflated.length; i++) {
+        binary += String.fromCharCode(deflated[i]);
+      }
+
+      // base64 encode
+      const base64 = btoa(binary);
+
+      // PlantUML uses a custom base64 alphabet: but server accepts standard base64 on modern endpoints.
+      // To ensure compatibility transform the base64 to urlsafe and then encode for path:
+      // Replace + with -, / with _, remove = (padding)
+      const urlSafe = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      return urlSafe;
+    }
+
+    async function renderDiagram() {
+      const puml = document.getElementById('pumlText').value;
+      const encoded = encodePlantUML(puml);
+
+      // PlantUML public server endpoint (svg)
+      const url = 'https://www.plantuml.com/plantuml/svg/' + encoded;
+
+      const svgWrap = document.getElementById('svgWrap');
+      svgWrap.innerHTML = '<div style="color:#2f587a">Génération en cours…</div>';
+
+      try {
+        // fetch the generated svg
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error('Erreur serveur PlantUML: ' + res.status);
+        }
+        const svgText = await res.text();
+        // inject SVG (sanitize minimal)
+        svgWrap.innerHTML = svgText;
+
+        // set download link data for svg
+        window.latestSvgText = svgText;
+        window.latestPuml = puml;
+        window.latestEncodedUrl = url;
+
+      } catch (err) {
+        svgWrap.innerHTML = '<div style="color:#a94442">Erreur: ' + err.message + '</div><div style="margin-top:8px;color:#2f587a">Si le rendu échoue, vérifie ta connexion ou essaye plus tard (serveur public).</div>';
+        console.error(err);
+      }
+    }
+
+    // Buttons
+    document.getElementById('renderBtn').addEventListener('click', renderDiagram);
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      const blob = new Blob([document.getElementById('pumlText').value], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'agts_uml.puml';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    document.getElementById('downloadSvgBtn').addEventListener('click', function () {
+      if (!window.latestSvgText) {
+        alert('Rends d’abord le diagramme (cliquer sur Render).');
+        return;
+      }
+      const blob = new Blob([window.latestSvgText], { type: 'image/svg+xml;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'agts_uml.svg';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    // auto render at load
+    window.addEventListener('load', function () {
+      // slight delay to allow pako to load
+      setTimeout(renderDiagram, 600);
+    });
+  </script>
+</body>
+
+</html>
